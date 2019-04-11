@@ -8,16 +8,16 @@ class Todos extends React.Component {
     todos: [],
     project: this.props.selectedProject,
     addTodoMode: false,
-  }
-  
-  componentWillMount(){
+  };
+
+  componentWillMount() {
     this.setState(() => ({
       todos: JSON.parse(localStorage[this.state.project.name]).todos,
       project: JSON.parse(localStorage[this.state.project.name]),
     }));
   }
 
-  componentWillReceiveProps(props){
+  componentWillReceiveProps(props) {
     this.setState(() => ({
       project: props.selectedProject,
     }));
@@ -27,32 +27,34 @@ class Todos extends React.Component {
     this.setState(() => ({
       addTodoMode: true,
     }));
-  }
+  };
 
-  submitTodo = (e) => {
+  submitTodo = e => {
     e.preventDefault();
     const [title, description, dueDate, priority, note] = e.target.elements;
 
-    const todo = todosController.create(title.value, 
-      description.value, 
-      dueDate.value, 
-      priority.value,  
-      note.value, 
-      this.state.project.name);
+    const todo = todosController.create(
+      title.value,
+      description.value,
+      dueDate.value,
+      priority.value,
+      note.value,
+      this.state.project.name,
+    );
     const project = JSON.parse(localStorage[todo.project]);
     const projectsArr = JSON.parse(localStorage.projectsArray);
     const projectIndex = projectsArr.findIndex(x => x.id === project.id);
     projectsArr[projectIndex] = project;
     localStorage.setItem('projectsArray', JSON.stringify(projectsArr));
-    this.setState((prevState) => ({
+    this.setState(prevState => ({
       todos: [...prevState.todos, todo],
       project: project,
       addTodoMode: false,
     }));
     e.target.reset();
-  }
+  };
 
-  deleteTodo = (e) => {
+  deleteTodo = e => {
     const todoID = Number(e.target.parentNode.parentNode.id);
     const todoForDeletion = this.state.project.todos.find(x => x.id === todoID);
     const projectName = todoForDeletion.project;
@@ -64,17 +66,21 @@ class Todos extends React.Component {
     this.setState(() => ({
       todos: JSON.parse(localStorage[projectName]).todos,
       project: JSON.parse(localStorage[projectName]),
-    }))
-  }
+    }));
+  };
 
   render() {
     return (
       <div>
-        {this.state.project ? <h2>
-          Todo list for&nbsp;
-          { this.state.project.name }
-        </h2> : <h2>Project Deleted</h2>}
-        <table>
+        {this.state.project ? (
+          <h2>
+            Todo list for&nbsp;
+            {this.state.project.name}
+          </h2>
+        ) : (
+          <h2>Project Deleted</h2>
+        )}
+        <table className="table table-striped">
           <thead>
             <tr>
               <th>Title</th>
@@ -87,30 +93,23 @@ class Todos extends React.Component {
             </tr>
           </thead>
           <tbody>
-            {
-              this.state.project && this.state.project.todos.map((todo, i) => (
-                <TodoItem
-                todo={todo}
-                key={todo.id}
-                deleteTodo={this.deleteTodo}
-                />
-                ))
-            }
+            {this.state.project &&
+              this.state.project.todos.map((todo, i) => (
+                <TodoItem todo={todo} key={todo.id} deleteTodo={this.deleteTodo} />
+              ))}
           </tbody>
         </table>
-        {
-          this.state.project && this.state.project.todos.length === 0 && <div>No todos yet for {this.state.project.name}</div>
-        }
-        {this.state.project ? <AddTodoBtn
-        handleTodoBtn={this.handleTodoBtn}
-        addTodoMode={this.state.addTodoMode}
-        /> : "No todos for non-existent project"}
-        <TodosForm
-        addTodoMode={this.state.addTodoMode}
-        submitTodo={this.submitTodo}
-        />
+        {this.state.project && this.state.project.todos.length === 0 && (
+          <div>No todos yet for {this.state.project.name}</div>
+        )}
+        {this.state.project ? (
+          <AddTodoBtn handleTodoBtn={this.handleTodoBtn} addTodoMode={this.state.addTodoMode} />
+        ) : (
+          'No todos for non-existent project'
+        )}
+        <TodosForm addTodoMode={this.state.addTodoMode} submitTodo={this.submitTodo} />
       </div>
-    )
+    );
   }
 }
 

@@ -16,7 +16,7 @@ export default class TodoListApp extends React.Component {
       const projectsArray = JSON.parse(json);
       this.setState(() => ({
         projects: projectsArray,
-        selectedProject: projectsArray[0]
+        selectedProject: projectsArray[0],
       }));
     }
   }
@@ -24,77 +24,72 @@ export default class TodoListApp extends React.Component {
   clickAddProjectBtn = () => {
     this.setState(() => ({
       addProjectMode: true,
-    }))
-  }
+    }));
+  };
 
-  submitProjectForm = (e) => {
+  submitProjectForm = e => {
     e.preventDefault();
     const project = projectsController.create(e.target.elements[0].value);
     this.setState(() => ({
       projects: JSON.parse(localStorage.projectsArray),
       addProjectMode: false,
       selectedProject: project,
-    }))
+    }));
     e.target.reset();
-  }
+  };
 
-  updateProjectForm = (id) => {
+  updateProjectForm = id => {
     projectsController.update(id);
     this.setState(() => ({
-      projects: JSON.parse(localStorage.projectsArray)
+      projects: JSON.parse(localStorage.projectsArray),
     }));
-  }
+  };
 
-  deleteProject = (e) => {
+  deleteProject = e => {
     const projectForDeletion = e.target.parentNode.childNodes[0].innerText;
     projectsController.delete(projectForDeletion);
     this.setState(() => ({
-      projects: JSON.parse(localStorage.projectsArray)
+      projects: JSON.parse(localStorage.projectsArray),
     }));
-  }
+  };
 
-  selectProject = (e) => {
+  selectProject = e => {
     const selectedProjectName = e.target.innerText;
     this.setState(() => ({
-      selectedProject: JSON.parse(localStorage.projectsArray).find(x => x.name === selectedProjectName),
+      selectedProject: JSON.parse(localStorage.projectsArray).find(
+        x => x.name === selectedProjectName,
+      ),
     }));
-  }
+  };
 
-  addTodo = (todo) => {
-    this.setState((prevState) => {
+  addTodo = todo => {
+    this.setState(prevState => {
       const updatedSelectedProject = Object.assign({}, prevState.selectedProject);
       updatedSelectedProject.todos.push(todo);
       const projectsArr = JSON.parse(localStorage.projectsArray);
       const projectIndex = projectsArr.findIndex(x => x.name === updatedSelectedProject.name);
       projectsArr[projectIndex] = updatedSelectedProject;
-      localStorage.setItem("projectsArray", JSON.stringify(projectsArr));
+      localStorage.setItem('projectsArray', JSON.stringify(projectsArr));
       return {
-        selectedProject: updatedSelectedProject
-      }
-    })
-  }
+        selectedProject: updatedSelectedProject,
+      };
+    });
+  };
 
   render() {
-    const {
-      projects,
-      selectedProject,
-      addProjectMode,
-    } = this.state;
+    const { projects, selectedProject, addProjectMode } = this.state;
     return (
       <div id="todo-app">
         <ProjectList
-        projects={projects}
-        addProjectMode={addProjectMode}
-        clickAddProjectBtn={this.clickAddProjectBtn}
-        submitProjectForm={this.submitProjectForm}
-        updateProjectForm={this.updateProjectForm}
-        deleteProject={this.deleteProject}
-        selectProject={this.selectProject}
+          projects={projects}
+          addProjectMode={addProjectMode}
+          clickAddProjectBtn={this.clickAddProjectBtn}
+          submitProjectForm={this.submitProjectForm}
+          updateProjectForm={this.updateProjectForm}
+          deleteProject={this.deleteProject}
+          selectProject={this.selectProject}
         />
-        <Todos
-        selectedProject={selectedProject}
-        addTodo={this.addTodo}
-        />
+        <Todos selectedProject={selectedProject} addTodo={this.addTodo} />
       </div>
     );
   }

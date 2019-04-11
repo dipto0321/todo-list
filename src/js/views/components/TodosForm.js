@@ -2,45 +2,26 @@ import React from 'react';
 
 export default (props) => {
   const {
-    addTodoMode,
-    editTodoMode,
-    title,
-    description,
-    dueDate,
-    priority,
-    notes,
+    addTodoMode, editTodoMode, title, description, dueDate, priority, notes,
   } = props;
-  const displayClass = addTodoMode || editTodoMode ? 'todo-form' : 'd-none todo-form';
+  const displayClass = addTodoMode || editTodoMode ? 'form-inline todo-form' : 'd-none todo-form';
   return (
-    <form
-    className={displayClass}
-    onSubmit={props.submitTodo}
-    >
+    <form className={displayClass} onSubmit={props.submitTodo}>
+      <input className="form-control" type="text" placeholder="Title" defaultValue={title} />
       <input
-      type="text"
-      placeholder="Title"
-      defaultValue={title}
+        className="form-control"
+        type="text"
+        placeholder="Description"
+        defaultValue={description}
       />
-      <input
-      type="text"
-      placeholder="Description"
-      defaultValue={description}
-      />
-      <input
-      type="date"
-      defaultValue={dueDate}
-      />
-      <select defaultValue={priority}>
+      <input className="form-control" type="date" defaultValue={dueDate} />
+      <select className="form-control" defaultValue={priority}>
         <option value="Priority">Priority</option>
         <option value="Low">Low</option>
         <option value="Medium">Medium</option>
         <option value="High">High</option>
       </select>
-      <input
-      type="text"
-      defaultValue={notes}
-      placeholder="Notes"
-      />
+      <input className="form-control" type="text" defaultValue={notes} placeholder="Notes" />
       <button className="d-none">Add</button>
     </form>
   );
